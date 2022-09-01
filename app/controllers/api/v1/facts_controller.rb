@@ -1,53 +1,51 @@
 class Api::V1::FactsController < ApplicationController
+    before_action :find_fact, only: [:show, :update, :destroy]
 
-    #GET /users
     def index
-        @users = User.all
-        render json:@users
+        @facts = Fact.all
+        render json: @facts
     end
 
-    #GET /user/:id
     def show
-        @user = User.find(params[:id])
-        render json: @user
+        render json: @fact
     end
 
-    #POST /users
     def create
-        @user = User.new(user_params)
-        if @user.save
-            render json: @user
+        @fact = Fact.new(fact_params)
+        if @fact.save
+            render json: @fact
         else
-            render error: { error: 'Unable to create User.' }, status: 400
+            render error: { error: 'Unable to create fact.' }, status: 400
         end
     end
 
-    #PUT /users/:id
     def update
-        @user = User.find(params[:id])
-        if @user
-            @user.update(user_params)
-            render json: {msg: 'User successfully updated.'}, status: 200
+        if @fact
+            @fact.update(fact_params)
+            render json: { msg: 'Fact successfully updated.' }, status: 200
         else
-            render json: { error: 'Unable to update User.' }, status: 400
+            render json: { error: 'Unable to update fact.' }, status: 400
         end
-    end
+    end 
 
-    # DELETE /users/:id
     def destroy
-        @user = User.find(params[:id])
-        if @user
-            @user.destroy
-            render json: {msg: 'User succesfully deleted.'}, status: 200
+        if @fact
+            @fact.destroy
+            render json: { msg: 'Fact successfully deleted.' }, status: 200
         else
-            render json: { error: 'Unable to delete User.' }, status: 400
+            render json: { error: 'Unable to delete fact.' }, status: 400
         end
     end
 
-    private
+    private 
 
-    def user_params
-        params.require(:user).permit(:username, :password)
+    def fact_params
+        params.require(:fact).permit(:fact, :likes, :user_id)
     end
+
+    def find_fact
+        @fact = Fact.find(params[:id])
+    end
+
     
 end
